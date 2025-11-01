@@ -656,105 +656,156 @@
 }
 
 /* =========================================
-   Minimal, clean UI for Self‑Help Tools
+   Premium, glassy UI for Self‑Help Tools
    (below BloomBot AI). CSS-only overrides.
    ========================================= */
 
 .self-help-section {
   margin-top: 2.5rem;
+  /* design tokens scoped to section */
+  --card-bg: rgba(16, 28, 42, 0.55);
+  --card-border: rgba(255,255,255,0.10);
+  --card-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  --surface: rgba(12, 22, 34, 0.65);
+  --chip-bg: rgba(255,255,255,0.06);
+  --text: #e8f0f7;
+  --muted: #a9b8c7;
+  --accent: #00e0b8;
+  --accent-2: #5aa0ff;
 }
 
-/* Cards: softer background, lighter borders, subtle shadow */
+/* Grid with generous breathing room; collapses gracefully */
+.self-help-section .tools-grid {
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Cards: glassmorphism, gradient hairline, subtle hover lift */
 .self-help-section .tool-card {
-  background: #162332; /* slightly calmer than #1c2b3a */
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-  border-radius: 12px;
-  padding: 16px;
+  position: relative;
+  background: linear-gradient(180deg, var(--card-bg), rgba(16,28,42,0.38));
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.self-help-section .tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+  border-color: rgba(255,255,255,0.16);
 }
 
-/* Titles simplified */
+/* Titles: subtle gradient text for a premium accent */
 .self-help-section .tool-title {
-  color: #e8f0f7;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: .3px;
+  margin-bottom: 14px;
 }
 
-/* Inputs and textareas unified */
+/* Surfaces: inputs/selects/textareas unified */
 .self-help-section input,
 .self-help-section textarea,
 .self-help-section select {
-  background: #0f1a25;
-  border: 1px solid rgba(255,255,255,0.08);
-  color: #e8f0f7;
-  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 12px;
+  outline: none;
+}
+.self-help-section input:focus,
+.self-help-section textarea:focus,
+.self-help-section select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,224,184,0.15);
 }
 
-/* Primary action buttons: calm accent, consistent sizing */
+/* Primary actions: vibrant gradient pill buttons */
 .self-help-section .primary,
 .self-help-section .btn-primary,
 .self-help-section .show-more-btn {
-  background: #00c29a;
-  color: #0d1a26;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #06131b;
   border: none;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-weight: 700;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  box-shadow: 0 10px 24px rgba(0,224,184,0.22);
 }
 .self-help-section .primary:hover,
 .self-help-section .btn-primary:hover,
 .self-help-section .show-more-btn:hover {
-  background: #00b28e;
+  filter: brightness(1.05);
 }
 
-/* Secondary chips/toggles toned down */
+/* Neutral chips/tags/toggles */
 .self-help-section .med-item,
 .self-help-section .chip,
 .self-help-section .tag-chip,
 .self-help-section .rate {
-  background: #122130;
-  color: #cfe9ff;
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--chip-bg);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  border-radius: 9999px;
 }
 .self-help-section .med-item.active,
 .self-help-section .tag-chip.on,
 .self-help-section .rate.on {
-  background: #00c29a;
-  color: #0d1a26;
-  border-color: #00c29a;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #06131b;
+  border-color: transparent;
 }
 
-/* Lists and stacks spacing */
+/* Lists and stacks */
 .self-help-section .tool-stack { gap: 16px; }
 .self-help-section .mood-list,
-.self-help-section .cbt-list { max-height: 220px; }
+.self-help-section .cbt-list { max-height: 240px; }
 
-/* Video and media cards: reduce contrast for minimal look */
+/* Content tiles inside tools */
 .self-help-section .sound-item,
 .self-help-section .cbt-entry,
 .self-help-section .affirm-box,
 .self-help-section .mood-row {
-  background: #132538;
-  border: 1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(19, 37, 56, 0.9), rgba(19,37,56,0.6));
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
 }
 
-/* Category tags and meta badges */
+/* Category/meta badges */
 .self-help-section .video-category-tag,
 .self-help-section .article-type,
 .self-help-section .article-category {
-  background: rgba(255,255,255,0.06);
-  color: #b8c7d6;
+  background: var(--chip-bg);
+  color: var(--muted);
 }
 
-/* Buttons within breathing tool */
-.self-help-section .breath-controls .primary { padding: 8px 14px; }
+/* Breathing circle: premium ring look */
+.self-help-section .breath-anim .circle {
+  width: 110px; height: 110px;
+  background: radial-gradient(circle at 30% 30%, rgba(0,224,184,0.15), transparent 60%), var(--surface);
+  border: 2px solid rgba(0,224,184,0.35);
+  box-shadow: inset 0 0 30px rgba(0,224,184,0.08), 0 10px 24px rgba(0,0,0,0.35);
+}
 
-/* Grid gap tuned for clarity */
-.self-help-section .tools-grid { gap: 16px; }
+/* Spacing harmonization */
+.self-help-section .tools-grid { row-gap: 20px; }
+.self-help-section .tool-card .tool-body { color: var(--text); }
 
-/* Responsive tightening for phones */
+/* Responsive refinement */
+@media (max-width: 900px) {
+  .self-help-section .tools-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+}
 @media (max-width: 600px) {
-  .self-help-section .tools-grid { grid-template-columns: 1fr; }
-  .self-help-section .tool-card { padding: 14px; }
+  .self-help-section .tools-grid { grid-template-columns: 1fr; gap: 14px; }
+  .self-help-section .tool-card { padding: 16px; border-radius: 14px; }
+  .self-help-section .primary,
+  .self-help-section .btn-primary { padding: 12px 14px; }
 }

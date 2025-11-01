@@ -45,20 +45,29 @@
     cursor: pointer;
    
 }
-.value-card:hover  {
-    zoom: 1.20; 
-}
+
 
 .value-card {
     background-color: #031221; 
     border-radius: 10px;
     padding: 1.2rem; 
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35); /* keep shadow height stable */
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     height: 100%; 
+    /* Smooth, no-reflow hover effect */
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+/* Smooth zoom without shifting layout */
+.value-card:hover,
+.value-card:focus-visible {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
 }
 
 .value-icon-wrapper {

@@ -536,6 +536,35 @@
     background-color: #00c795;
 }
 
+/* Mic button (speech-to-text) */
+.ai-mic-btn {
+    flex-shrink: 0;
+    margin-right: 8px; /* spacing before send button */
+    background-color: transparent;
+    color: #a0a8b4;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    font-size: 1rem;
+}
+.ai-mic-btn:hover:not(:disabled) {
+    color: #f0f8ff;
+    border-color: #3b4c63;
+    background-color: #1b2a3a;
+}
+.ai-mic-btn.on {
+    color: #0d1a26;
+    background-color: #00d9a5;
+    border-color: #00d9a5;
+}
+.ai-mic-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
 /* --- Response Box Styling (Visible above the input bar) --- */
 .ai-response-box {
     background-color: #1c2b3a;

@@ -154,6 +154,9 @@ const VideoCard = ({ video }) => (
 // 🟢 FINAL CHAT INPUT BOX COMPONENT (EMBEDDED)
 function ChatInputBox({ onSubmit, isLoading, currentUser, lastResponse }) {
     const [localInput, setLocalInput] = useState('');
+    const [recognizing, setRecognizing] = useState(false);
+    const [speechSupported, setSpeechSupported] = useState(false);
+    const recognitionRef = useRef(null);
 
     // Determine placeholder text
     const placeholderText = !currentUser
@@ -170,6 +173,39 @@ function ChatInputBox({ onSubmit, isLoading, currentUser, lastResponse }) {
             setLocalInput('');
         }
     };
+
+    // Initialize Web Speech API (speech-to-text)
+    useEffect(() => {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) { setSpeechSupported(false); return; }
+        setSpeechSupported(true);
+        const rec = new SR();
+        rec.lang = 'en-US';
+        rec.interimResults = true;
+        rec.continuous = true;
+        rec.onresult = (event) => {
+            let finalText = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const res = event.results[i];
+                finalText += res[0].transcript;
+            }
+            if (finalText) setLocalInput((prev) => finalText.trim());
+        };
+        rec.onend = () => { setRecognizing(false); };
+        rec.onerror = () => { setRecognizing(false); };
+        recognitionRef.current = rec;
+        return () => { try { rec.stop(); } catch (_) {} };
+    }, []);
+
+    const startSTT = () => {
+        if (!speechSupported || recognizing) return;
+        try { recognitionRef.current && recognitionRef.current.start(); setRecognizing(true); } catch (_) {}
+    };
+    const stopSTT = () => {
+        if (!speechSupported || !recognizing) return;
+        try { recognitionRef.current && recognitionRef.current.stop(); } catch (_) {}
+    };
+    const toggleSTT = () => { recognizing ? stopSTT() : startSTT(); };
 
     // Lightweight formatter: remove numbering and break sentences to new lines
     const formatResponse = (text) => {
@@ -289,6 +325,17 @@ function ChatInputBox({ onSubmit, isLoading, currentUser, lastResponse }) {
                     disabled={isLoading || !currentUser}
                     className="ai-chat-input"
                 />
+                <button
+                    type="button"
+                    className={`ai-mic-btn ${recognizing ? 'on' : ''}`}
+                    onClick={toggleSTT}
+                    title={speechSupported ? (recognizing ? 'Stop recording' : 'Start voice input') : 'Voice input not supported in this browser'}
+                    disabled={!speechSupported || isLoading || !currentUser}
+                    aria-pressed={recognizing}
+                    aria-label="Toggle voice input"
+                >
+                    {recognizing ? '🎙️' : '🎤'}
+                </button>
                 <button type="submit" disabled={isLoading || !currentUser} className="ai-send-btn">
                     {isLoading ? '...' : '→'}
                 </button>

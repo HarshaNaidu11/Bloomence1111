@@ -19,17 +19,18 @@ const { startNotificationsScheduler } = require('./jobs/scheduler');
 // --- MongoDB Connection ---
 const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI)
-  .then(() => console.log('✅ MongoDB connected successfully.'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .then(() => console.log(' MongoDB connected successfully.'))
+  .catch(err => console.error(' MongoDB connection error:', err));
 
 // --- Middleware ---
-app.use(cors({ origin: 'http://localhost:5173' }));
+const allowedOrigins = ['http://localhost:5173', 'https://bloomence-2.onrender.com'];
+app.use(cors({ origin: allowedOrigins }));
 app.use(bodyParser.json());
 app.use(express.json());
 
 // --- Routes ---
-app.use('/api/results', verifyToken, resultsRoutes); // ✅ fixed
-app.use('/api/gemini', verifyToken, geminiRoutes);   // ✅ fixed
+app.use('/api/results', verifyToken, resultsRoutes); // 
+app.use('/api/gemini', verifyToken, geminiRoutes);   // 
 app.use('/api/notifications', verifyToken, notificationsRoutes);
 
 // Basic test route
@@ -44,7 +45,7 @@ app.get('/', (req, res) => {
 // --- Realtime ---
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:5173' }
+  cors: { origin: allowedOrigins }
 });
 
 io.use(async (socket, next) => {

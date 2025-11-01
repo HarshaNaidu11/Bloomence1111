@@ -58,7 +58,8 @@
   color: #f0f8ff;
   border: 1px solid #2a3d54;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.95rem;
   display: inline-flex;
   align-items: center;
   gap: 8px;

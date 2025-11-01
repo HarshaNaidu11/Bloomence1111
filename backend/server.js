@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
 require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
@@ -23,7 +24,7 @@ mongoose.connect(mongoURI)
   .catch(err => console.error(' MongoDB connection error:', err));
 
 // --- Middleware ---
-const allowedOrigins = ['http://localhost:5173', 'https://bloomence-2.onrender.com'];
+const allowedOrigins = ['http://localhost:5173', 'https://bloomence-2.onrender.com', 'https://bloomence-mss1.onrender.com'];
 app.use(cors({ origin: allowedOrigins }));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -33,13 +34,24 @@ app.use('/api/results', verifyToken, resultsRoutes); //
 app.use('/api/gemini', verifyToken, geminiRoutes);   // 
 app.use('/api/notifications', verifyToken, notificationsRoutes);
 
-// Basic test route
-app.get('/', (req, res) => {
+// Basic health route (moved off '/')
+app.get('/health', (req, res) => {
   if (mongoose.connection.readyState === 1) {
     res.status(200).send('Backend is running and MongoDB is READY.');
   } else {
     res.status(503).send('Backend is running, but MongoDB connection failed.');
   }
+});
+
+// --- Serve Frontend Build & SPA Fallback ---
+// Serve static assets from the Vite build output
+const frontendDistPath = path.resolve(__dirname, '../frontend/dist');
+app.use(express.static(frontendDistPath));
+
+// Important: place SPA fallback AFTER API routes but BEFORE server start.
+// This ensures non-API routes are handled by React Router.
+app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.join(frontendDistPath, 'index.html'));
 });
 
 // --- Realtime ---

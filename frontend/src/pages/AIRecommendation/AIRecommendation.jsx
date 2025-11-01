@@ -1007,9 +1007,6 @@ export default function AiRecommendation() {
                     <MoodJournalCard />
                     <BreathingCard />
                     <AffirmationsCard />
-                    <EmotionSelectorCard />
-                    <ValuesStrengthsCard />
-                    <GoalsPlannerCard />
                     <div className="tool-stack">
                         <RewardsCard />
                         <DailySuggestionCard />

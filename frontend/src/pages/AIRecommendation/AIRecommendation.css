@@ -720,6 +720,8 @@
   flex-direction: column;
   gap: 12px;
   height: 100%; /* equal height with align-items:stretch */
+  transform: translateZ(0);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 
 /* Stacks and lists: spacing only */
@@ -731,6 +733,30 @@
 .self-help-section .tool-card .primary,
 .self-help-section .tool-card .btn-primary,
 .self-help-section .tool-card .show-more-btn { align-self: stretch; }
+
+/* Subtle lift+scale hover */
+.self-help-section .tool-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* Inputs cleaner edges */
+.self-help-section input,
+.self-help-section textarea,
+.self-help-section select {
+  outline: none;
+}
+.self-help-section input:focus,
+.self-help-section textarea:focus,
+.self-help-section select:focus {
+  box-shadow: 0 0 0 3px rgba(0,217,165,0.15);
+}
+
+/* Primary glow on hover */
+.self-help-section .primary:hover,
+.self-help-section .btn-primary:hover {
+  box-shadow: 0 8px 22px rgba(0,217,165,0.18);
+}
 
 /* Breathing controls layout refinements */
 .self-help-section .breath-controls { flex-wrap: wrap; row-gap: 8px; }

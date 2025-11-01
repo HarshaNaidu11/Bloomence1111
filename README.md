@@ -41,6 +41,21 @@ The app uses a **secure hybrid architecture** combining:
 
 ## ✨ **Features**
 
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard 1](docs/screenshots/dashboard-1.png)
+![Dashboard 2](docs/screenshots/dashboard-2.png)
+
+### AI Recommendation
+![AI Recommendation](docs/screenshots/ai-recommendation.png)
+
+### Emergency Contacts
+![Emergency Contacts](docs/screenshots/emergency-contacts.png)
+
+### Questionnaires
+![Questionnaires](docs/screenshots/questionnaires.png)
+
 1. 🔒 **Secure Authentication**
    - Firebase handles sign-up/login (Email, Password, Google OAuth).  
 2. 🧭 **Protected Routes**

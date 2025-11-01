@@ -72,6 +72,25 @@
 .home-btn:active { transform: translateY(0); }
 .home-btn .icon { width: 16px; height: 16px; display: block; color: #00d9a5; }
 
+/* Inline Home button inside header/content (dashboard style) */
+.home-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1.2rem;
+  background-color: #1c2b3a;
+  border: 1px solid #2a3d54;
+  border-radius: 8px;
+  color: #f0f8ff;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.home-inline:hover { background-color: #2a3d54; transform: translateY(-1px); }
+.home-inline:active { transform: translateY(0); }
+.home-inline .home-icon { color: #00d9a5; }
+
 .phq9-content {
   display: grid;
   grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);

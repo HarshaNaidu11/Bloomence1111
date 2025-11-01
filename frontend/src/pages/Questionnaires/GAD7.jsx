@@ -226,6 +226,12 @@ export default function GAD7() {
                 <span className="progress-count">{currentQuestionNumber} / {totalQuestions}</span>
                 <span className="progress-subtext">{answeredCount} answered</span>
               </div>
+              <button className="home-inline" onClick={() => navigate('/')} aria-label="Go to Home">
+                <svg className="home-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z"/>
+                </svg>
+                <span>Go to Home</span>
+              </button>
             </header>
 
             <div className="phq9-container">

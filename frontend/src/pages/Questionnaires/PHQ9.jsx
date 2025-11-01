@@ -240,6 +240,10 @@ export default function PHQ9() {
                 <span className="progress-count">{currentQuestionNumber} / {totalQuestions}</span>
                 <span className="progress-subtext">{answeredCount} answered</span>
               </div>
+              <button className="home-inline" onClick={() => navigate('/')} aria-label="Go to Home">
+                <Home size={20} className="home-icon" />
+                <span>Go to Home</span>
+              </button>
             </header>
 
             <div className="phq9-container">

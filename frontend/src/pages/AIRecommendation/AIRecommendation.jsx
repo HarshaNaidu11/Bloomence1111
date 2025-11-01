@@ -101,9 +101,9 @@ const getArticleLayoutSlots = (data) => {
 
 const { featured, standard, miniStack } = getArticleLayoutSlots(ARTICLES_DATA);
 
-// Reusable ArticleCard component (unchanged)
+// Reusable ArticleCard component
 const ArticleCard = ({ article, className }) => (
-  <motion.a
+    <motion.a
         href={article.link}
         target="_blank"
         rel="noopener noreferrer"
@@ -125,6 +125,45 @@ const ArticleCard = ({ article, className }) => (
         </div>
     </motion.a>
 );
+
+ 
+
+// --- Tabbed wrapper for key self-help tools ---
+function SelfHelpTabbed() {
+    const [tab, setTab] = useState('cbt'); // 'cbt' | 'rewards' | 'wellness'
+    return (
+        <Card title="Tools: Quick Switch" className="tool-tabbed">
+            <div className="tool-tabs" role="tablist" aria-label="Self-help tools">
+                <button
+                    type="button"
+                    className={`tool-tab ${tab==='cbt'?'active':''}`}
+                    role="tab"
+                    aria-selected={tab==='cbt'}
+                    onClick={()=>setTab('cbt')}
+                >CBT</button>
+                <button
+                    type="button"
+                    className={`tool-tab ${tab==='rewards'?'active':''}`}
+                    role="tab"
+                    aria-selected={tab==='rewards'}
+                    onClick={()=>setTab('rewards')}
+                >Rewards</button>
+                <button
+                    type="button"
+                    className={`tool-tab ${tab==='wellness'?'active':''}`}
+                    role="tab"
+                    aria-selected={tab==='wellness'}
+                    onClick={()=>setTab('wellness')}
+                >Wellness</button>
+            </div>
+            <div className="tool-tab-panels">
+                {tab==='cbt' && <CBTReframeCard />}
+                {tab==='rewards' && <RewardsCard />}
+                {tab==='wellness' && <DailySuggestionCard />}
+            </div>
+        </Card>
+    );
+}
 
 // Reusable VideoCard component (unchanged)
 const VideoCard = ({ video }) => (
@@ -1007,11 +1046,7 @@ export default function AiRecommendation() {
                     <MoodJournalCard />
                     <BreathingCard />
                     <AffirmationsCard />
-                    <div className="tool-stack">
-                        <RewardsCard />
-                        <DailySuggestionCard />
-                    </div>
-                    <CBTReframeCard />
+                    <SelfHelpTabbed />
                 </div>
             </section>
             <CrisisButton />

@@ -43,8 +43,6 @@ The app uses a **secure hybrid architecture** combining:
 
 ## 📸 Screenshots
 
-## 📸 **Screenshots**
-
 ### 🧭 Dashboard
 <img src="screenshots/dashboard-1.png" width="600" alt="Dashboard 1"/>
 <img src="screenshots/dashboard-2.png" width="600" alt="Dashboard 2"/>
@@ -198,6 +196,4 @@ This project is licensed under the MIT License.
 - backend
   - express, mongoose, firebase‑admin, google‑genai (Gemini), cors, dotenv
   - socket.io (installed; available for real‑time features)
-
-
 

@@ -1,7 +1,8 @@
 services:
   - type: web
-    name: bloomence-backend
+    name: BLOOMENCE
     env: node
     rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
+    plan: free

@@ -3,22 +3,31 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config(); // Load environment variables
 
-// --- Step 1: Resolve Firebase Service Account file path ---
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+// --- Step 1: Load Firebase Service Account from env (JSON string or file path) ---
+const serviceAccountInput = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
-// Ensure the path exists
-if (!serviceAccountPath) {
+// Ensure the value exists
+if (!serviceAccountInput) {
   throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY is not defined in .env file.");
 }
 
-// Resolve full path relative to this file
-const resolvedPath = path.resolve(serviceAccountPath);
-
-// --- Step 2: Read and parse the service account JSON file ---
+// --- Step 2: Read and parse the service account JSON (from JSON string OR file) ---
 let serviceAccount;
 try {
-  const fileContents = fs.readFileSync(resolvedPath, "utf8");
-  serviceAccount = JSON.parse(fileContents);
+  const trimmed = serviceAccountInput.trim();
+  if (trimmed.startsWith("{")) {
+    // Treat as JSON string from environment
+    serviceAccount = JSON.parse(trimmed);
+  } else {
+    // Treat as file path
+    const resolvedPath = path.resolve(serviceAccountInput);
+    const fileContents = fs.readFileSync(resolvedPath, "utf8");
+    serviceAccount = JSON.parse(fileContents);
+  }
+  // Normalize private_key newlines if provided as escaped \n
+  if (serviceAccount && typeof serviceAccount.private_key === "string") {
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+  }
 } catch (err) {
   console.error("❌ Error reading or parsing Firebase service account JSON:", err);
   throw new Error("Invalid Firebase Service Account JSON format in environment variable.");

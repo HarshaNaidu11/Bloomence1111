@@ -1,9 +1,7 @@
-import admin from "firebase-admin";
-import fs from "fs";
-import path from "path";
-import dotenv from "dotenv";
-
-dotenv.config(); // Load environment variables
+const admin = require("firebase-admin");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config(); // Load environment variables
 
 // --- Step 1: Resolve Firebase Service Account file path ---
 const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
@@ -35,7 +33,7 @@ if (!admin.apps.length) {
 }
 
 // --- Step 4: Middleware to verify Firebase ID Token ---
-export const verifyToken = async (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -55,4 +53,4 @@ export const verifyToken = async (req, res, next) => {
 };
 
 // --- Step 5: Export the initialized admin object (optional) ---
-export { admin };
+module.exports = { verifyToken, admin };

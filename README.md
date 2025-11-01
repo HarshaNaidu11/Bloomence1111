@@ -43,18 +43,21 @@ The app uses a **secure hybrid architecture** combining:
 
 ## 📸 Screenshots
 
-### Dashboard
-![Dashboard 1](docs/screenshots/dashboard-1.png)
-![Dashboard 2](docs/screenshots/dashboard-2.png)
+## 📸 **Screenshots**
 
-### AI Recommendation
-![AI Recommendation](docs/screenshots/ai-recommendation.png)
+### 🧭 Dashboard
+<img src="screenshots/dashboard-1.png" width="600" alt="Dashboard 1"/>
+<img src="screenshots/dashboard-2.png" width="600" alt="Dashboard 2"/>
 
-### Emergency Contacts
-![Emergency Contacts](docs/screenshots/emergency-contacts.png)
+### 🤖 AI Recommendation
+<img src="screenshots/ai-recommendation.png" width="600" alt="AI Recommendation"/>
 
-### Questionnaires
-![Questionnaires](docs/screenshots/questionnaires.png)
+### 📞 Emergency Contacts
+<img src="screenshots/emergency-contacts.png" width="600" alt="Emergency Contacts"/>
+
+### 🧾 Questionnaires
+<img src="screenshots/questionnaires.png" width="600" alt="Questionnaires"/>
+
 
 1. 🔒 **Secure Authentication**
    - Firebase handles sign-up/login (Email, Password, Google OAuth).  
@@ -195,4 +198,6 @@ This project is licensed under the MIT License.
 - backend
   - express, mongoose, firebase‑admin, google‑genai (Gemini), cors, dotenv
   - socket.io (installed; available for real‑time features)
+
+
 

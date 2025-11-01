@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Home } from 'lucide-react';
 import { useAuth } from "../../context/AuthContext"; // 🟢 Auth Context for user check
 import "./PHQ9.css";
 import downloadImage from "../../assets/download.jpeg";
@@ -171,11 +172,9 @@ export default function PHQ9() {
       <div className="phq9-wrapper">
         <div className="phq9-background" aria-hidden="true"></div>
         <div className="phq9-page">
-          <button className="home-btn" onClick={() => navigate('/')}>
-            <svg className="icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z"/>
-            </svg>
-            Go to Home
+          <button className="home-btn" onClick={() => navigate('/')} aria-label="Go to Home">
+            <Home size={20} className="home-icon" />
+            <span>Go to Home</span>
           </button>
           <div className="phq9-content">
             <aside className="phq9-side-panel">
@@ -214,11 +213,9 @@ export default function PHQ9() {
     <div className="phq9-wrapper">
       <div className="phq9-background" aria-hidden="true"></div>
       <div className="phq9-page">
-        <button className="home-btn" onClick={() => navigate('/')}>
-          <svg className="icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z"/>
-          </svg>
-          Go to Home
+        <button className="home-btn" onClick={() => navigate('/')} aria-label="Go to Home">
+          <Home size={20} className="home-icon" />
+          <span>Go to Home</span>
         </button>
         <div className="phq9-content">
           <aside className="phq9-side-panel">

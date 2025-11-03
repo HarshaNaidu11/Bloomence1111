@@ -133,11 +133,17 @@ export default function SignupLogin() {
       }
 
       await signInWithPopup(auth, provider);
-      try { const u = auth.currentUser; if (u) { await registerEmail(u.displayName || 'User', u.email); } } catch (e) { console.error('registerEmail (social) failed', e); }
+      const u = auth.currentUser;
+      const proceed = u ? window.confirm(`Continue as ${u.email}?`) : true;
+      if (!proceed) {
+        await auth.signOut();
+        toast.show('Sign-in cancelled', 'info');
+        return;
+      }
+      try { if (u) { await registerEmail(u.displayName || 'User', u.email); } } catch (e) { console.error('registerEmail (social) failed', e); }
       try { await notifyLogin(); } catch (e) { console.error('notify login (social) failed', e); }
       document.cookie = 'bloomence_session=true; path=/; max-age=2592000';
       toast.show('Successfully logged in with ' + providerName, 'success');
-      // Defer navigation slightly to allow AuthContext to update
       setTimeout(() => navigate('/dashboard'), 250);
 
     } catch (error) {

@@ -5,13 +5,16 @@ import { HashRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import { AuthProvider } from './context/AuthContext'; 
+import { ToastProvider } from './components/Toast/ToastProvider';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode> {/* Added StrictMode back for stability */}
+  <React.StrictMode>
     <HashRouter>
-      <AuthProvider> 
-        <App /> 
-      </AuthProvider>
-   </HashRouter>
+      <ToastProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ToastProvider>
+    </HashRouter>
   </React.StrictMode>
 );

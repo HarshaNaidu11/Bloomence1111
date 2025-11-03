@@ -81,7 +81,7 @@ export default function SignupLogin() {
   // If already authenticated (e.g., redirect flow), go inside
   useEffect(() => {
     if (currentUser) {
-      setTimeout(() => navigate('/dashboard'), 150);
+      setTimeout(() => navigate('/'), 150);
     }
   }, [currentUser, navigate]);
 
@@ -109,7 +109,7 @@ export default function SignupLogin() {
       }
 
       // Defer navigation slightly to allow AuthContext to update
-      setTimeout(() => navigate('/dashboard'), 250);
+      setTimeout(() => navigate('/'), 250);
 
     } catch (error) {
       toast.show(error.message || 'Authentication failed', 'error');

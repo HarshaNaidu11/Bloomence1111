@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 // 🛑 IMPORTANT: Update this path to where you define Firebase Auth
 import { auth } from "../firebaseConfig"; 
 import { onAuthStateChanged } from 'firebase/auth';
-import { registerEmail, seen } from '../api/notifications';
+import { registerEmail, seen, login as notifyLogin } from '../api/notifications';
 import { connectRealtime } from '../realtime';
 
 const AuthContext = createContext();
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
     (async () => {
       if (!currentUser) return;
       try { await registerEmail(currentUser.displayName || 'User', currentUser.email); } catch (e) { console.error('registerEmail failed', e); }
+      try { await notifyLogin(); } catch (e) { console.error('notifyLogin failed', e); }
       try { await seen(); } catch (e) { console.error('seen failed', e); }
       try { socket = await connectRealtime(); } catch (e) { console.error('connectRealtime failed', e); }
     })();

@@ -23,6 +23,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
 import TermsOfUse from "./pages/TermsOfUse";
 import "./App.css";
+import CookieConsent from "./components/CookieConsent/CookieConsent";
 
 // Firebase/Auth Imports
 import { auth } from './firebaseConfig'; 
@@ -266,6 +267,7 @@ function HomePage() {
         <TestimonialScroller />
       </div>
       <ValueSection />
+      <CookieConsent />
     </div>
   );
 }

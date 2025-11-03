@@ -24,8 +24,24 @@ mongoose.connect(mongoURI)
   .catch(err => console.error(' MongoDB connection error:', err));
 
 // --- Middleware ---
-const allowedOrigins = ['http://localhost:5173', 'https://bloomence-2.onrender.com', 'https://bloomence-mss1.onrender.com'];
-app.use(cors({ origin: allowedOrigins }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://bloomence-2.onrender.com',
+  'https://bloomence-mss1.onrender.com'
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow non-browser tools
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // handle preflight
 app.use(bodyParser.json());
 app.use(express.json());
 

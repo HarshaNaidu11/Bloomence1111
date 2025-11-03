@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 🟢 CRITICAL: Import useNavigate
 import "./Signup.css";
 import { auth, googleProvider, microsoftProvider, appleProvider } from "../../firebaseConfig";// NOTE: Path assumption
+import { registerEmail, login as notifyLogin } from "../../api/notifications";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -80,6 +81,7 @@ export default function SignupLogin() {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, form.email, form.password);
+        try { await notifyLogin(); } catch (e) { console.error('notify login failed', e); }
         alert("Logged in successfully!");
       } else {
         if (form.password !== form.confirmPassword) {
@@ -87,6 +89,8 @@ export default function SignupLogin() {
           return;
         }
         await createUserWithEmailAndPassword(auth, form.email, form.password);
+        try { await registerEmail(form.name || 'User', form.email); } catch (e) { console.error('registerEmail failed', e); }
+        try { await notifyLogin(); } catch (e) { console.error('notify login failed', e); }
         alert("Signed up successfully!");
       }
 
@@ -115,6 +119,8 @@ export default function SignupLogin() {
       }
 
       await signInWithPopup(auth, provider);
+      try { const u = auth.currentUser; if (u) { await registerEmail(u.displayName || 'User', u.email); } } catch (e) { console.error('registerEmail (social) failed', e); }
+      try { await notifyLogin(); } catch (e) { console.error('notify login (social) failed', e); }
       
       // Navigate on success for all social logins
       navigate('/'); 

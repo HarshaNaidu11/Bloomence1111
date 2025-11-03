@@ -17,6 +17,18 @@ export async function registerEmail(name, email) {
   return res.json();
 }
 
+export async function login() {
+  const token = await getAuth().currentUser.getIdToken();
+  const res = await fetch(`${BASE_URL}/api/notifications/login`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).message || 'login ping failed');
+  return res.json();
+}
+
 export async function seen() {
   const token = await getAuth().currentUser.getIdToken();
   const res = await fetch(`${BASE_URL}/api/notifications/seen`, {

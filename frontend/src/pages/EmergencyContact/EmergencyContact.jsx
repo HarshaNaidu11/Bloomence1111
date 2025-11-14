@@ -61,6 +61,7 @@ function EmergencyContact() {
     const [statusMessage, setStatusMessage] = useState('Initializing...');
     const [isResultsCollapsed, setIsResultsCollapsed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [routeInfo, setRouteInfo] = useState({ id: null, timeSec: 0, distanceKm: 0, eta: '' });
 
     const loadScripts = useCallback(() => {
         const scripts = [
@@ -208,6 +209,21 @@ function EmergencyContact() {
             addWaypoints: false,
             lineOptions: { styles: [{ color: '#10B981', opacity: 0.8, weight: 6 }] }
         }).addTo(mapInstance.current);
+
+        routingControl.current.on('routesfound', (e) => {
+            try {
+                const r = e.routes && e.routes[0];
+                if (!r) return;
+                const timeSec = Math.max(0, Math.round(r.summary.totalTime || 0));
+                const distanceKm = Math.max(0, (r.summary.totalDistance || 0) / 1000);
+                const etaDate = new Date(Date.now() + timeSec * 1000);
+                const fmt = (d) => {
+                    const opts = { hour: 'numeric', minute: '2-digit' };
+                    try { return new Intl.DateTimeFormat(undefined, opts).format(d); } catch { return d.toLocaleTimeString(); }
+                };
+                setRouteInfo({ id: hospital.id, timeSec, distanceKm, eta: fmt(etaDate) });
+            } catch (_) { }
+        });
     };
 
     const centerOnUser = () => {
@@ -268,7 +284,13 @@ function EmergencyContact() {
                         ) : nearbyHospitals.length > 0 ? (
                             nearbyHospitals.map(hospital => (
                                 <div key={hospital.id} className="list-item">
-                                    <div className="item-info"><strong>{hospital.name}</strong></div>
+                                    <div className="item-info"><strong>{hospital.name}</strong>
+                                        {routeInfo.id === hospital.id && (
+                                            <div style={{ color: '#9ca3af', fontSize: 12, marginTop: 4 }}>
+                                                ≈ {Math.round(routeInfo.timeSec / 60)} min • {routeInfo.distanceKm.toFixed(1)} km • ETA {routeInfo.eta}
+                                            </div>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={() => handleGetDirections(hospital)}
                                         className="directions-button"

@@ -1,6 +1,7 @@
 // src/pages/Questionnaires/GAD7.jsx
 
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -17,16 +18,17 @@ const gad7Questions = [
   "Becoming easily annoyed or irritable",
   "Feeling afraid as if something awful might happen",
 ];
-const options = [
-  { value: 0, label: "Not at all" },
-  { value: 1, label: "Several days" },
-  { value: 2, label: "More than half the days" },
-  { value: 3, label: "Nearly every day" },
+const optionKeys = [
+  { value: 0, key: 'gad7.options.o0' },
+  { value: 1, key: 'gad7.options.o1' },
+  { value: 2, key: 'gad7.options.o2' },
+  { value: 3, key: 'gad7.options.o3' },
 ];
 
 export default function GAD7() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { t } = useTranslation();
 
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState(Array(gad7Questions.length).fill(null));
@@ -158,11 +160,11 @@ export default function GAD7() {
       <div className="phq9-wrapper">
         <div className="phq9-background" aria-hidden="true"></div>
         <div className="phq9-page">
-          <button className="home-btn" onClick={() => navigate('/')}> 
+          <button className="home-btn" onClick={() => navigate('/')}>
             <svg className="icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z"/>
+              <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z" />
             </svg>
-            Go to Home
+            {t('common.go_home')}
           </button>
           <div className="phq9-content">
             <aside className="phq9-side-panel">
@@ -197,9 +199,9 @@ export default function GAD7() {
     <div className="phq9-wrapper">
       <div className="phq9-background" aria-hidden="true"></div>
       <div className="phq9-page">
-        <button className="home-btn" onClick={() => navigate('/')}> 
+        <button className="home-btn" onClick={() => navigate('/')}>
           <svg className="icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z"/>
+            <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z" />
           </svg>
           Go to Home
         </button>
@@ -216,19 +218,17 @@ export default function GAD7() {
           <div className="phq9-main">
             <header className="phq9-header">
               <div className="phq9-heading">
-                <h1>GAD-7 Questionnaire</h1>
-                <p className="intro-text">
-                  Over the last 2 weeks, how often have you been bothered by any of the following problems?
-                </p>
+                <h1>{t('gad7.title')}</h1>
+                <p className="intro-text">{t('gad7.intro')}</p>
               </div>
               <div className="progress-panel">
-                <span className="progress-label">Question</span>
+                <span className="progress-label">{t('common.question')}</span>
                 <span className="progress-count">{currentQuestionNumber} / {totalQuestions}</span>
-                <span className="progress-subtext">{answeredCount} answered</span>
+                <span className="progress-subtext">{answeredCount} {t('common.answered')}</span>
               </div>
               <button className="home-inline" onClick={() => navigate('/')} aria-label="Go to Home">
                 <svg className="home-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z"/>
+                  <path d="M12 3.172 2.293 12.88a1 1 0 0 0 1.414 1.414L5 13.001V20a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-6.999l1.293 1.293a1 1 0 0 0 1.414-1.414L12 3.172Z" />
                 </svg>
                 <span>Go to Home</span>
               </button>
@@ -255,7 +255,7 @@ export default function GAD7() {
                   </p>
 
                   <div className="options">
-                    {options.map((opt) => (
+                    {optionKeys.map((opt) => (
                       <button
                         key={opt.value}
                         type="button"
@@ -265,7 +265,7 @@ export default function GAD7() {
                         disabled={loading}
                       >
                         <span className="option-indicator" aria-hidden="true"></span>
-                        <span className="option-label">{opt.label}</span>
+                        <span className="option-label">{t(opt.key)}</span>
                       </button>
                     ))}
                   </div>
@@ -281,7 +281,7 @@ export default function GAD7() {
                   onClick={() => goToQuestion(currentQ - 1, -1)}
                   disabled={currentQ === 0 || loading}
                 >
-                  &larr; Previous
+                  &larr; {t('common.previous')}
                 </button>
 
                 <button
@@ -295,10 +295,10 @@ export default function GAD7() {
                   disabled={loading || answers[currentQ] === null}
                 >
                   {loading
-                    ? "Processing..."
+                    ? t('common.processing')
                     : currentQ === totalQuestions - 1
-                      ? "Submit"
-                      : "Next Question"}
+                      ? t('common.submit')
+                      : t('common.next_question')}
                 </button>
               </div>
             </div>

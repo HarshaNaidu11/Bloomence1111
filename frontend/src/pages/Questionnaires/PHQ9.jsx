@@ -1,6 +1,7 @@
 // src/pages/Questionnaires/PHQ9.jsx
 
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Home } from 'lucide-react';
@@ -21,16 +22,17 @@ const phq9Questions = [
   "Thoughts that you would be better off dead, or thoughts of hurting yourself in some way",
 ];
 
-const options = [
-  { value: 0, label: "Not at all" },
-  { value: 1, label: "Several days" },
-  { value: 2, label: "More than half the days" },
-  { value: 3, label: "Nearly every day" },
+const optionsKeys = [
+  { value: 0, key: 'phq9.options.o0' },
+  { value: 1, key: 'phq9.options.o1' },
+  { value: 2, key: 'phq9.options.o2' },
+  { value: 3, key: 'phq9.options.o3' },
 ];
 
 export default function PHQ9() {
   const navigate = useNavigate();
   const { currentUser } = useAuth(); // 🟢 Get current user from context
+  const { t } = useTranslation();
 
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState(Array(phq9Questions.length).fill(null));
@@ -230,15 +232,15 @@ export default function PHQ9() {
           <div className="phq9-main">
             <header className="phq9-header">
               <div className="phq9-heading">
-                <h1>PHQ-9 Questionnaire</h1>
+                <h1>{t('phq9.title')}</h1>
                 <p className="intro-text">
-                  Over the last 2 weeks, how often have you been bothered by any of the following problems?
+                  {t('phq9.intro')}
                 </p>
               </div>
               <div className="progress-panel">
-                <span className="progress-label">Question</span>
+                <span className="progress-label">{t('common.question')}</span>
                 <span className="progress-count">{currentQuestionNumber} / {totalQuestions}</span>
-                <span className="progress-subtext">{answeredCount} answered</span>
+                <span className="progress-subtext">{answeredCount} {t('common.answered')}</span>
               </div>
               <button className="home-inline" onClick={() => navigate('/')} aria-label="Go to Home">
                 <Home size={20} className="home-icon" />
@@ -267,7 +269,7 @@ export default function PHQ9() {
                   </p>
 
                   <div className="options">
-                    {options.map((opt) => (
+                    {optionsKeys.map((opt) => (
                       <button
                         key={opt.value}
                         type="button"
@@ -280,7 +282,7 @@ export default function PHQ9() {
                           className="option-indicator"
                           aria-hidden="true"
                         ></span>
-                        <span className="option-label">{opt.label}</span>
+                        <span className="option-label">{t(opt.key)}</span>
                       </button>
                     ))}
                   </div>
@@ -296,7 +298,7 @@ export default function PHQ9() {
                   onClick={() => goToQuestion(currentQ - 1, -1)}
                   disabled={currentQ === 0 || loading}
                 >
-                  &larr; Previous
+                  &larr; {t('common.previous')}
                 </button>
 
                 <button
@@ -310,10 +312,10 @@ export default function PHQ9() {
                   disabled={loading || answers[currentQ] === null}
                 >
                   {loading
-                    ? "Processing..."
+                    ? t('common.processing')
                     : currentQ === totalQuestions - 1
-                      ? "Submit"
-                      : "Next Question"}
+                      ? t('common.submit')
+                      : t('common.next_question')}
                 </button>
               </div>
             </div>

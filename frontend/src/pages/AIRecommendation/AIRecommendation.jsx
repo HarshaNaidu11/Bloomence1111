@@ -8,7 +8,7 @@ import { Home } from 'lucide-react';
 import './AIRecommendation.css';
 
 // --- CONSTANTS ---
-const API_BASE = import.meta.env.VITE_API_URL || 'https://bloomence-mss1.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://bloomence-5bn4.onrender.com';
 const BOT_API_URL = `${API_BASE}/api/gemini/chat`;
 const BOT_STREAM_URL = `${API_BASE}/api/gemini/chat-stream`;
 const ACCENT_COLOR = '#00d9a5';
@@ -126,7 +126,7 @@ const ArticleCard = ({ article, className }) => (
     </motion.a>
 );
 
- 
+
 
 // --- Tabbed wrapper for key self-help tools ---
 function SelfHelpTabbed() {
@@ -136,30 +136,30 @@ function SelfHelpTabbed() {
             <div className="tool-tabs" role="tablist" aria-label="Self-help tools">
                 <button
                     type="button"
-                    className={`tool-tab ${tab==='cbt'?'active':''}`}
+                    className={`tool-tab ${tab === 'cbt' ? 'active' : ''}`}
                     role="tab"
-                    aria-selected={tab==='cbt'}
-                    onClick={()=>setTab('cbt')}
+                    aria-selected={tab === 'cbt'}
+                    onClick={() => setTab('cbt')}
                 >CBT</button>
                 <button
                     type="button"
-                    className={`tool-tab ${tab==='rewards'?'active':''}`}
+                    className={`tool-tab ${tab === 'rewards' ? 'active' : ''}`}
                     role="tab"
-                    aria-selected={tab==='rewards'}
-                    onClick={()=>setTab('rewards')}
+                    aria-selected={tab === 'rewards'}
+                    onClick={() => setTab('rewards')}
                 >Rewards & Encouragements</button>
                 <button
                     type="button"
-                    className={`tool-tab ${tab==='wellness'?'active':''}`}
+                    className={`tool-tab ${tab === 'wellness' ? 'active' : ''}`}
                     role="tab"
-                    aria-selected={tab==='wellness'}
-                    onClick={()=>setTab('wellness')}
+                    aria-selected={tab === 'wellness'}
+                    onClick={() => setTab('wellness')}
                 >Today’s Wellness</button>
             </div>
             <div className="tool-tab-panels">
-                {tab==='cbt' && <CBTReframeCard />}
-                {tab==='rewards' && <RewardsCard />}
-                {tab==='wellness' && <DailySuggestionCard />}
+                {tab === 'cbt' && <CBTReframeCard />}
+                {tab === 'rewards' && <RewardsCard />}
+                {tab === 'wellness' && <DailySuggestionCard />}
             </div>
         </Card>
     );
@@ -233,16 +233,16 @@ function ChatInputBox({ onSubmit, isLoading, currentUser, lastResponse }) {
         rec.onend = () => { setRecognizing(false); };
         rec.onerror = () => { setRecognizing(false); };
         recognitionRef.current = rec;
-        return () => { try { rec.stop(); } catch (_) {} };
+        return () => { try { rec.stop(); } catch (_) { } };
     }, []);
 
     const startSTT = () => {
         if (!speechSupported || recognizing) return;
-        try { recognitionRef.current && recognitionRef.current.start(); setRecognizing(true); } catch (_) {}
+        try { recognitionRef.current && recognitionRef.current.start(); setRecognizing(true); } catch (_) { }
     };
     const stopSTT = () => {
         if (!speechSupported || !recognizing) return;
-        try { recognitionRef.current && recognitionRef.current.stop(); } catch (_) {}
+        try { recognitionRef.current && recognitionRef.current.stop(); } catch (_) { }
     };
     const toggleSTT = () => { recognizing ? stopSTT() : startSTT(); };
 
@@ -375,7 +375,7 @@ function ChatInputBox({ onSubmit, isLoading, currentUser, lastResponse }) {
                 >
                     {/* mic SVG icon */}
                     <svg class="ai-mic-icon" viewBox="0 0 24 24" fill="#c7d2fe" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2Z"/>
+                        <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2Z" />
                     </svg>
                 </button>
                 <button type="submit" disabled={isLoading || !currentUser} className="ai-send-btn">
@@ -392,7 +392,7 @@ function useLocalStorage(key, initial) {
     const [state, setState] = useState(() => {
         try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : initial; } catch { return initial; }
     });
-    useEffect(() => { try { localStorage.setItem(key, JSON.stringify(state)); } catch {} }, [key, state]);
+    useEffect(() => { try { localStorage.setItem(key, JSON.stringify(state)); } catch { } }, [key, state]);
     return [state, setState];
 }
 
@@ -422,11 +422,11 @@ function MeditationCard() {
         <Card title="Guided Meditations">
             <div className="med-list">
                 {presets.map(p => (
-                    <button key={p.id} className={`med-item ${current?.id===p.id?'active':''}`} onClick={()=>setCurrent(p)}>{p.title}</button>
+                    <button key={p.id} className={`med-item ${current?.id === p.id ? 'active' : ''}`} onClick={() => setCurrent(p)}>{p.title}</button>
                 ))}
             </div>
             <div className="med-player">
-                {current?.type==='youtube' ? (
+                {current?.type === 'youtube' ? (
                     <iframe title={current.title} src={current.src} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                 ) : (
                     <audio controls src={current?.src} />
@@ -448,11 +448,11 @@ function AffirmationsCard() {
     const [current, setCurrent] = useUserStorage('affirm.current', BASE[0]);
     const [favorites, setFav] = useUserStorage('affirm.favs', []);
     const next = () => {
-        const all = [...BASE, ...favorites.filter(f=>!BASE.includes(f))];
-        const pick = all[Math.floor(Math.random()*all.length)] || BASE[0];
+        const all = [...BASE, ...favorites.filter(f => !BASE.includes(f))];
+        const pick = all[Math.floor(Math.random() * all.length)] || BASE[0];
         setCurrent(pick);
     };
-    const save = () => { if (!favorites.includes(current)) setFav([current, ...favorites].slice(0,50)); };
+    const save = () => { if (!favorites.includes(current)) setFav([current, ...favorites].slice(0, 50)); };
     return (
         <Card title="Positive Affirmations">
             <div className="affirm-box">{current}</div>
@@ -460,10 +460,10 @@ function AffirmationsCard() {
                 <button className="primary" onClick={next}>New</button>
                 <button onClick={save}>Save Favorite</button>
             </div>
-            {favorites.length>0 && (
+            {favorites.length > 0 && (
                 <div className="affirm-favs">
-                    {favorites.map((a,i)=> (
-                        <button key={i} className="chip" onClick={()=>setCurrent(a)}>{a}</button>
+                    {favorites.map((a, i) => (
+                        <button key={i} className="chip" onClick={() => setCurrent(a)}>{a}</button>
                     ))}
                 </div>
             )}
@@ -473,9 +473,9 @@ function AffirmationsCard() {
 
 function EmotionSelectorCard() {
     const EMOTIONS = [
-        {name:'Calm', color:'#22c55e'}, {name:'Happy', color:'#f59e0b'}, {name:'Grateful', color:'#a3e635'},
-        {name:'Stressed', color:'#ef4444'}, {name:'Anxious', color:'#8b5cf6'}, {name:'Sad', color:'#60a5fa'},
-        {name:'Angry', color:'#f97316'}, {name:'Lonely', color:'#94a3b8'}, {name:'Inspired', color:'#06b6d4'}
+        { name: 'Calm', color: '#22c55e' }, { name: 'Happy', color: '#f59e0b' }, { name: 'Grateful', color: '#a3e635' },
+        { name: 'Stressed', color: '#ef4444' }, { name: 'Anxious', color: '#8b5cf6' }, { name: 'Sad', color: '#60a5fa' },
+        { name: 'Angry', color: '#f97316' }, { name: 'Lonely', color: '#94a3b8' }, { name: 'Inspired', color: '#06b6d4' }
     ];
     const [selected, setSelected] = useUserStorage('emotion.selected', EMOTIONS[0].name);
     const [intensity, setIntensity] = useUserStorage('emotion.intensity', 5);
@@ -483,66 +483,66 @@ function EmotionSelectorCard() {
         <Card title="Emotion Wheel / Selector">
             <div className="emotion-grid">
                 {EMOTIONS.map(e => (
-                    <button key={e.name} className={`emotion ${selected===e.name?'on':''}`} style={{'--c': e.color}} onClick={()=>setSelected(e.name)}>{e.name}</button>
+                    <button key={e.name} className={`emotion ${selected === e.name ? 'on' : ''}`} style={{ '--c': e.color }} onClick={() => setSelected(e.name)}>{e.name}</button>
                 ))}
             </div>
             <label className="emotion-intensity">Intensity: <b>{intensity}</b>/10</label>
-            <input type="range" min="0" max="10" value={intensity} onChange={e=>setIntensity(Number(e.target.value))} />
+            <input type="range" min="0" max="10" value={intensity} onChange={e => setIntensity(Number(e.target.value))} />
         </Card>
     );
 }
 
 function ValuesStrengthsCard() {
-    const VALUES = ['Kindness','Growth','Family','Curiosity','Health','Service','Creativity'];
-    const STRENGTHS = ['Perseverance','Humor','Fairness','Honesty','Gratitude','Bravery'];
+    const VALUES = ['Kindness', 'Growth', 'Family', 'Curiosity', 'Health', 'Service', 'Creativity'];
+    const STRENGTHS = ['Perseverance', 'Humor', 'Fairness', 'Honesty', 'Gratitude', 'Bravery'];
     const [vals, setVals] = useUserStorage('values.selected', []);
     const [strs, setStrs] = useUserStorage('strengths.selected', []);
-    const toggle = (list, setter, item) => setter(list.includes(item)? list.filter(x=>x!==item): [...list, item]);
-    const summary = vals.length||strs.length ? `You value ${vals.join(', ')} and your strengths include ${strs.join(', ')}.` : 'Pick a few that resonate with you.';
+    const toggle = (list, setter, item) => setter(list.includes(item) ? list.filter(x => x !== item) : [...list, item]);
+    const summary = vals.length || strs.length ? `You value ${vals.join(', ')} and your strengths include ${strs.join(', ')}.` : 'Pick a few that resonate with you.';
     return (
         <Card title="Values & Strengths">
             <div className="tag-list">
-                {VALUES.map(v=> <button key={v} className={`tag-chip ${vals.includes(v)?'on':''}`} onClick={()=>toggle(vals,setVals,v)}>{v}</button>)}
+                {VALUES.map(v => <button key={v} className={`tag-chip ${vals.includes(v) ? 'on' : ''}`} onClick={() => toggle(vals, setVals, v)}>{v}</button>)}
             </div>
-            <div className="tag-list" style={{marginTop:8}}>
-                {STRENGTHS.map(s=> <button key={s} className={`tag-chip ${strs.includes(s)?'on':''}`} onClick={()=>toggle(strs,setStrs,s)}>{s}</button>)}
+            <div className="tag-list" style={{ marginTop: 8 }}>
+                {STRENGTHS.map(s => <button key={s} className={`tag-chip ${strs.includes(s) ? 'on' : ''}`} onClick={() => toggle(strs, setStrs, s)}>{s}</button>)}
             </div>
-            <div className="muted" style={{marginTop:8}}>{summary}</div>
+            <div className="muted" style={{ marginTop: 8 }}>{summary}</div>
         </Card>
     );
 }
 
 function GoalsPlannerCard() {
     const [goals, setGoals] = useUserStorage('goals.items', []);
-    const [g, setG] = useState({ title:'', specific:'', measurable:'', achievable:'', relevant:'', timebound:'', steps:'' });
+    const [g, setG] = useState({ title: '', specific: '', measurable: '', achievable: '', relevant: '', timebound: '', steps: '' });
     const add = () => {
         if (!g.title.trim()) return;
-        const item = { id:Date.now(), ...g, steps: (g.steps||'').split('\n').map(s=>({ id:Math.random(), text:s.trim(), done:false })).filter(s=>s.text) };
-        setGoals(prev => [item, ...(prev||[])]);
-        setG({ title:'', specific:'', measurable:'', achievable:'', relevant:'', timebound:'', steps:'' });
+        const item = { id: Date.now(), ...g, steps: (g.steps || '').split('\n').map(s => ({ id: Math.random(), text: s.trim(), done: false })).filter(s => s.text) };
+        setGoals(prev => [item, ...(prev || [])]);
+        setG({ title: '', specific: '', measurable: '', achievable: '', relevant: '', timebound: '', steps: '' });
     };
-    const toggleStep = (goalId, stepId) => setGoals(gs=> (gs||[]).map(gl=> gl.id===goalId? {...gl, steps: gl.steps.map(s=> s.id===stepId? {...s, done:!s.done}: s)}: gl));
-    const progress = (gl) => gl.steps.length? Math.round(100*gl.steps.filter(s=>s.done).length/gl.steps.length): 0;
+    const toggleStep = (goalId, stepId) => setGoals(gs => (gs || []).map(gl => gl.id === goalId ? { ...gl, steps: gl.steps.map(s => s.id === stepId ? { ...s, done: !s.done } : s) } : gl));
+    const progress = (gl) => gl.steps.length ? Math.round(100 * gl.steps.filter(s => s.done).length / gl.steps.length) : 0;
     return (
         <Card title="SMART Goals Planner">
-            <input placeholder="Goal title" value={g.title} onChange={e=>setG({...g, title:e.target.value})} />
-            <input placeholder="Specific" value={g.specific} onChange={e=>setG({...g, specific:e.target.value})} />
-            <input placeholder="Measurable" value={g.measurable} onChange={e=>setG({...g, measurable:e.target.value})} />
-            <input placeholder="Achievable" value={g.achievable} onChange={e=>setG({...g, achievable:e.target.value})} />
-            <input placeholder="Relevant" value={g.relevant} onChange={e=>setG({...g, relevant:e.target.value})} />
-            <input placeholder="Time-bound" value={g.timebound} onChange={e=>setG({...g, timebound:e.target.value})} />
-            <textarea rows={3} placeholder={'Steps (one per line)'} value={g.steps} onChange={e=>setG({...g, steps:e.target.value})} />
+            <input placeholder="Goal title" value={g.title} onChange={e => setG({ ...g, title: e.target.value })} />
+            <input placeholder="Specific" value={g.specific} onChange={e => setG({ ...g, specific: e.target.value })} />
+            <input placeholder="Measurable" value={g.measurable} onChange={e => setG({ ...g, measurable: e.target.value })} />
+            <input placeholder="Achievable" value={g.achievable} onChange={e => setG({ ...g, achievable: e.target.value })} />
+            <input placeholder="Relevant" value={g.relevant} onChange={e => setG({ ...g, relevant: e.target.value })} />
+            <input placeholder="Time-bound" value={g.timebound} onChange={e => setG({ ...g, timebound: e.target.value })} />
+            <textarea rows={3} placeholder={'Steps (one per line)'} value={g.steps} onChange={e => setG({ ...g, steps: e.target.value })} />
             <button className="primary" onClick={add}>Add Goal</button>
             <div className="goal-list">
-                {(goals||[]).map(gl=> (
+                {(goals || []).map(gl => (
                     <div key={gl.id} className="goal-item">
                         <div className="goal-title">{gl.title || 'Untitled Goal'}</div>
                         <div className="muted">Specific: {gl.specific || '-'} | Measurable: {gl.measurable || '-'} | Achievable: {gl.achievable || '-'} | Relevant: {gl.relevant || '-'} | Time-bound: {gl.timebound || '-'}</div>
-                        <div className="progress"><div className="bar" style={{width: progress(gl)+'%'}} /></div>
+                        <div className="progress"><div className="bar" style={{ width: progress(gl) + '%' }} /></div>
                         <div className="steps">
-                            {gl.steps.length ? gl.steps.map(s=> (
-                                <label key={s.id} className={`step ${s.done?'done':''}`}>
-                                    <input type="checkbox" checked={s.done} onChange={()=>toggleStep(gl.id, s.id)} /> {s.text}
+                            {gl.steps.length ? gl.steps.map(s => (
+                                <label key={s.id} className={`step ${s.done ? 'done' : ''}`}>
+                                    <input type="checkbox" checked={s.done} onChange={() => toggleStep(gl.id, s.id)} /> {s.text}
                                 </label>
                             )) : <div className="muted">No steps yet.</div>}
                         </div>
@@ -554,16 +554,16 @@ function GoalsPlannerCard() {
 }
 
 function RewardsCard() {
-    const today = new Date().toISOString().slice(0,10);
+    const today = new Date().toISOString().slice(0, 10);
     const [last, setLast] = useUserStorage('rewards.last', null);
     const [streak, setStreak] = useUserStorage('rewards.streak', 0);
     const mark = () => {
         if (last === today) return;
-        const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
-        setStreak(last===yesterday? streak+1 : 1);
+        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+        setStreak(last === yesterday ? streak + 1 : 1);
         setLast(today);
     };
-    const badge = streak>=7? '🌟 7‑day Streak!' : streak>=3? '✨ 3‑day Streak!' : 'Keep going 💚';
+    const badge = streak >= 7 ? '🌟 7‑day Streak!' : streak >= 3 ? '✨ 3‑day Streak!' : 'Keep going 💚';
     return (
         <Card title="Rewards & Encouragement">
             <div className="streak-box">
@@ -586,11 +586,11 @@ function DailySuggestionCard() {
         'Send a kind message to someone you appreciate.',
         'Step outside for 2 minutes of fresh air.',
     ];
-    const [suggestion, setSuggestion] = useUserStorage('suggestion.today', { date:'', text: IDEAS[0] });
-    const today = new Date().toISOString().slice(0,10);
-    useEffect(()=>{
+    const [suggestion, setSuggestion] = useUserStorage('suggestion.today', { date: '', text: IDEAS[0] });
+    const today = new Date().toISOString().slice(0, 10);
+    useEffect(() => {
         if (suggestion.date !== today) {
-            const text = IDEAS[Math.floor(Math.random()*IDEAS.length)];
+            const text = IDEAS[Math.floor(Math.random() * IDEAS.length)];
             setSuggestion({ date: today, text });
         }
     }, []);
@@ -598,9 +598,9 @@ function DailySuggestionCard() {
         <Card title="Today’s Wellness Suggestion">
             <div className="affirm-box">{suggestion.text}</div>
             <div className="muted">Gentle nudge • You’re doing great 💚</div>
-            <div className="row gap" style={{marginTop:8}}>
-                <button onClick={()=>{
-                    const text = IDEAS[Math.floor(Math.random()*IDEAS.length)];
+            <div className="row gap" style={{ marginTop: 8 }}>
+                <button onClick={() => {
+                    const text = IDEAS[Math.floor(Math.random() * IDEAS.length)];
                     setSuggestion({ date: today, text });
                 }}>New Suggestion</button>
             </div>
@@ -612,7 +612,7 @@ function CrisisButton() {
     const [open, setOpen] = useState(false);
     return (
         <>
-            <button className="crisis-btn" onClick={()=>setOpen(!open)}>Crisis Help</button>
+            <button className="crisis-btn" onClick={() => setOpen(!open)}>Crisis Help</button>
             {open && (
                 <div className="crisis-panel">
                     <div className="crisis-title">If you’re in immediate danger, call your local emergency number.</div>
@@ -621,7 +621,7 @@ function CrisisButton() {
                         <li><b>US:</b> 988 Suicide & Crisis Lifeline</li>
                         <li><b>UK:</b> Samaritans 116 123</li>
                     </ul>
-                    <a href="tel:988" className="primary" style={{display:'inline-block', marginTop:8}}>Call now</a>
+                    <a href="tel:988" className="primary" style={{ display: 'inline-block', marginTop: 8 }}>Call now</a>
                 </div>
             )}
         </>
@@ -632,11 +632,11 @@ function MoodJournalCard() {
     const [entries, setEntries] = useUserStorage('mood.entries', []);
     const [rating, setRating] = useState(3);
     const [note, setNote] = useState('');
-    const today = new Date().toISOString().slice(0,10);
+    const today = new Date().toISOString().slice(0, 10);
     const add = () => {
         if (!note.trim()) return;
         const e = { id: Date.now(), date: today, rating, note: note.trim() };
-        setEntries([e, ...entries].slice(0,100));
+        setEntries([e, ...entries].slice(0, 100));
         setNote('');
     };
     return (
@@ -644,15 +644,15 @@ function MoodJournalCard() {
             <div className="mood-inputs">
                 <label>Today: {today}</label>
                 <div className="mood-rating">
-                    {[1,2,3,4,5].map(n => (
-                        <button key={n} className={`rate ${rating===n?'on':''}`} onClick={()=>setRating(n)}>{n}</button>
+                    {[1, 2, 3, 4, 5].map(n => (
+                        <button key={n} className={`rate ${rating === n ? 'on' : ''}`} onClick={() => setRating(n)}>{n}</button>
                     ))}
                 </div>
-                <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="Add a short note..." rows={3} />
+                <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Add a short note..." rows={3} />
                 <button className="primary" onClick={add}>Save Entry</button>
             </div>
             <div className="mood-list">
-                {entries.length===0 ? <div className="muted">No entries yet.</div> : entries.map(e=> (
+                {entries.length === 0 ? <div className="muted">No entries yet.</div> : entries.map(e => (
                     <div key={e.id} className="mood-row">
                         <span className="badge">{e.rating}/5</span>
                         <span className="date">{e.date}</span>
@@ -666,8 +666,8 @@ function MoodJournalCard() {
 
 function BreathingCard() {
     const PRESETS = [
-        { id:'box', label:'Box 4-4-4', inhale:4, hold:4, exhale:4 },
-        { id:'478', label:'4-7-8', inhale:4, hold:7, exhale:8 },
+        { id: 'box', label: 'Box 4-4-4', inhale: 4, hold: 4, exhale: 4 },
+        { id: '478', label: '4-7-8', inhale: 4, hold: 7, exhale: 8 },
     ];
     const [preset, setPreset] = useUserStorage('breathing.preset', PRESETS[0]);
     const [phase, setPhase] = useState('idle');
@@ -675,32 +675,32 @@ function BreathingCard() {
     const [running, setRunning] = useUserStorage('breathing.running', false);
     useEffect(() => {
         if (!running) return;
-        let t; let seq = ['inhale','hold','exhale']; let idx = 0;
+        let t; let seq = ['inhale', 'hold', 'exhale']; let idx = 0;
         const nextPhase = () => {
-            const ph = seq[idx%3];
-            const dur = ph==='inhale'?preset.inhale: ph==='hold'?preset.hold : preset.exhale;
+            const ph = seq[idx % 3];
+            const dur = ph === 'inhale' ? preset.inhale : ph === 'hold' ? preset.hold : preset.exhale;
             setPhase(ph); setRemaining(dur);
-            t = setInterval(()=>{
-                setRemaining(r=>{
-                    if (r<=1) { clearInterval(t); idx++; nextPhase(); return 0; }
-                    return r-1;
+            t = setInterval(() => {
+                setRemaining(r => {
+                    if (r <= 1) { clearInterval(t); idx++; nextPhase(); return 0; }
+                    return r - 1;
                 });
-            },1000);
+            }, 1000);
         };
         nextPhase();
-        return ()=> clearInterval(t);
+        return () => clearInterval(t);
     }, [running, preset]);
     return (
         <Card title="Breathing Exercises">
             <div className="breath-controls">
-                <select value={preset.id} onChange={e=>setPreset(PRESETS.find(p=>p.id===e.target.value))}>
-                    {PRESETS.map(p=>(<option key={p.id} value={p.id}>{p.label}</option>))}
+                <select value={preset.id} onChange={e => setPreset(PRESETS.find(p => p.id === e.target.value))}>
+                    {PRESETS.map(p => (<option key={p.id} value={p.id}>{p.label}</option>))}
                 </select>
-                <button className="primary" onClick={()=>setRunning(!running)}>{running?'Stop':'Start'}</button>
+                <button className="primary" onClick={() => setRunning(!running)}>{running ? 'Stop' : 'Start'}</button>
             </div>
             <div className={`breath-anim ${phase}`}>
                 <div className="circle" />
-                <div className="phase-text">{phase==='idle'?'Ready':phase.toUpperCase()} • {remaining}s</div>
+                <div className="phase-text">{phase === 'idle' ? 'Ready' : phase.toUpperCase()} • {remaining}s</div>
             </div>
         </Card>
     );
@@ -708,46 +708,46 @@ function BreathingCard() {
 
 function CBTReframeCard() {
     const [entries, setEntries] = useUserStorage('cbt.entries', []);
-    const TAGS = ['Anxiety','Stress','Motivation','Mood','Sleep','Work','Relationships'];
+    const TAGS = ['Anxiety', 'Stress', 'Motivation', 'Mood', 'Sleep', 'Work', 'Relationships'];
     const [form, setForm] = useState({
-        situation:'', thought:'', evidenceFor:'', evidenceAgainst:'', balanced:'', action:'',
-        before:5, after:5, reflection:'', tags:[]
+        situation: '', thought: '', evidenceFor: '', evidenceAgainst: '', balanced: '', action: '',
+        before: 5, after: 5, reflection: '', tags: []
     });
-    const toggleTag = (t) => setForm(f => ({ ...f, tags: f.tags.includes(t) ? f.tags.filter(x=>x!==t) : [...f.tags, t] }));
+    const toggleTag = (t) => setForm(f => ({ ...f, tags: f.tags.includes(t) ? f.tags.filter(x => x !== t) : [...f.tags, t] }));
     const save = () => {
         const clean = { ...form };
         // Trim text fields
-        ['situation','thought','evidenceFor','evidenceAgainst','balanced','action','reflection'].forEach(k => clean[k] = (clean[k]||'').trim());
+        ['situation', 'thought', 'evidenceFor', 'evidenceAgainst', 'balanced', 'action', 'reflection'].forEach(k => clean[k] = (clean[k] || '').trim());
         if (!clean.situation || !clean.thought) return;
         clean.id = Date.now();
-        setEntries([clean, ...entries].slice(0,50));
-        setForm({ situation:'', thought:'', evidenceFor:'', evidenceAgainst:'', balanced:'', action:'', before:5, after:5, reflection:'', tags:[] });
+        setEntries([clean, ...entries].slice(0, 50));
+        setForm({ situation: '', thought: '', evidenceFor: '', evidenceAgainst: '', balanced: '', action: '', before: 5, after: 5, reflection: '', tags: [] });
     };
     return (
         <Card title="CBT Thought Reframing" className="cbt-card">
             <div className="cbt-form">
-                <input value={form.situation} onChange={e=>setForm({...form, situation:e.target.value})} placeholder="Situation (what happened?)" />
-                <input value={form.thought} onChange={e=>setForm({...form, thought:e.target.value})} placeholder="Automatic thought" />
+                <input value={form.situation} onChange={e => setForm({ ...form, situation: e.target.value })} placeholder="Situation (what happened?)" />
+                <input value={form.thought} onChange={e => setForm({ ...form, thought: e.target.value })} placeholder="Automatic thought" />
                 <div className="cbt-scales">
                     <label>Emotion intensity before: <b>{form.before}</b>/10</label>
-                    <input type="range" min="0" max="10" value={form.before} onChange={e=>setForm({...form, before: Number(e.target.value)})} />
+                    <input type="range" min="0" max="10" value={form.before} onChange={e => setForm({ ...form, before: Number(e.target.value) })} />
                     <label>After reframing: <b>{form.after}</b>/10</label>
-                    <input type="range" min="0" max="10" value={form.after} onChange={e=>setForm({...form, after: Number(e.target.value)})} />
+                    <input type="range" min="0" max="10" value={form.after} onChange={e => setForm({ ...form, after: Number(e.target.value) })} />
                 </div>
-                <textarea rows={2} value={form.evidenceFor} onChange={e=>setForm({...form, evidenceFor:e.target.value})} placeholder="Evidence supporting the thought" />
-                <textarea rows={2} value={form.evidenceAgainst} onChange={e=>setForm({...form, evidenceAgainst:e.target.value})} placeholder="Evidence against the thought" />
-                <input value={form.balanced} onChange={e=>setForm({...form, balanced:e.target.value})} placeholder="Balanced alternative thought" />
-                <input value={form.action} onChange={e=>setForm({...form, action:e.target.value})} placeholder="Next small action" />
-                <textarea rows={2} value={form.reflection} onChange={e=>setForm({...form, reflection:e.target.value})} placeholder="Reflection: What did you learn?" />
+                <textarea rows={2} value={form.evidenceFor} onChange={e => setForm({ ...form, evidenceFor: e.target.value })} placeholder="Evidence supporting the thought" />
+                <textarea rows={2} value={form.evidenceAgainst} onChange={e => setForm({ ...form, evidenceAgainst: e.target.value })} placeholder="Evidence against the thought" />
+                <input value={form.balanced} onChange={e => setForm({ ...form, balanced: e.target.value })} placeholder="Balanced alternative thought" />
+                <input value={form.action} onChange={e => setForm({ ...form, action: e.target.value })} placeholder="Next small action" />
+                <textarea rows={2} value={form.reflection} onChange={e => setForm({ ...form, reflection: e.target.value })} placeholder="Reflection: What did you learn?" />
                 <div className="tag-list">
                     {TAGS.map(t => (
-                        <button type="button" key={t} className={`tag-chip ${form.tags.includes(t)?'on':''}`} onClick={()=>toggleTag(t)}>{t}</button>
+                        <button type="button" key={t} className={`tag-chip ${form.tags.includes(t) ? 'on' : ''}`} onClick={() => toggleTag(t)}>{t}</button>
                     ))}
                 </div>
                 <button className="primary" onClick={save}>Save</button>
             </div>
             <div className="cbt-list">
-                {entries.length===0 ? <div className="muted">No entries yet.</div> : entries.map(e=> (
+                {entries.length === 0 ? <div className="muted">No entries yet.</div> : entries.map(e => (
                     <div key={e.id} className="cbt-entry">
                         <div className="cbt-head">
                             <span className="badge">Before {e.before}/10</span>
@@ -805,7 +805,7 @@ export default function AiRecommendation() {
                 const decoder = new TextDecoder('utf-8');
                 let buffer = '';
                 let receivedAny = false;
-                for (;;) {
+                for (; ;) {
                     const { value, done } = await reader.read();
                     if (done) break;
                     receivedAny = true;
@@ -820,7 +820,7 @@ export default function AiRecommendation() {
                                 const delta = line.slice(6);
                                 if (delta.startsWith('[ERROR]')) {
                                     // Cancel streaming and fall back to JSON endpoint
-                                    try { await reader.cancel(); } catch(_){}
+                                    try { await reader.cancel(); } catch (_) { }
                                     const response = await fetch(BOT_API_URL, {
                                         method: 'POST',
                                         headers: {

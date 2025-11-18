@@ -32,7 +32,8 @@ const allowedOrigins = [
   'http://localhost:5173',
   'https://bloomence-2.onrender.com',
   'https://bloomence-mss1.onrender.com',
-  'https://bloomence-5bn4.onrender.com'
+  'https://bloomence-5bn4.onrender.com',
+  'https://bloomencecares.onrender.com'
 ];
 const corsOptions = {
   origin: function (origin, callback) {

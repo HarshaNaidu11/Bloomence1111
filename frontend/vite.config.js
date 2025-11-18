@@ -5,11 +5,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [ tailwindcss(),react()],
+  plugins: [tailwindcss(), react()],
   server: {
     proxy: {
       '/api': {
-        target: 'https://bloomence-99-backend.onrender.com',
+        target: 'http://localhost:3001',
         changeOrigin: true,
         secure: true,
         // do not rewrite; backend already expects /api prefix

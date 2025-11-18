@@ -38,7 +38,7 @@ export default function GAD7() {
   const [direction, setDirection] = useState(1);
 
   // Backend API base
-  const API_BASE = import.meta.env.VITE_API_URL || 'https://bloomence-mss1.onrender.com';
+  const API_BASE = import.meta.env.VITE_API_URL || 'https://bloomence-5bn4.onrender.com';
 
   const handleAnswer = (value) => {
     const updatedAnswers = [...answers];

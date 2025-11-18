@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth';
 export async function connectRealtime() {
   const token = await getAuth().currentUser.getIdToken();
   const isDev = !!(import.meta.env && import.meta.env.DEV);
-  const defaultLocal = isDev ? 'http://localhost:3001' : 'https://bloomence-mss1.onrender.com';
+  const defaultLocal = isDev ? 'http://localhost:3001' : 'https://bloomence-5bn4.onrender.com';
   const url = import.meta.env.VITE_SOCKET_URL || defaultLocal;
   const socket = io(url, {
     transports: ['websocket'],

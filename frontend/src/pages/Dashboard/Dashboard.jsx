@@ -33,7 +33,7 @@ const TARGET_ICONS = {
 };
 
 // Backend API base
-const API_BASE = import.meta.env.VITE_API_URL || 'https://bloomence-mss1.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://bloomence-5bn4.onrender.com';
 
 // --- PHQ-9 LEGEND DATA (Unchanged) ---
 const phq9Legend = [

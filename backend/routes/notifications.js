@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
       } catch (_) { }
       return res.json({ message: 'Profile updated' });
     }
-    
+
 
     // New user -> create and send welcome once
     await User.create({ firebaseUid: uid, email, name, registeredAt: new Date(), lastSeen: new Date() });
@@ -50,6 +50,21 @@ router.post('/register', async (req, res) => {
 
     res.json({ message: 'Welcome email sent' });
   } catch (e) {
+    // If the user already exists (duplicate firebaseUid), treat as success instead of 500
+    if (e && e.code === 11000 && e.keyPattern && e.keyPattern.firebaseUid === 1) {
+      try {
+        const { uid } = req.user;
+        const { email, name } = req.body || {};
+        if (uid && email) {
+          await User.updateOne(
+            { firebaseUid: uid },
+            { $set: { email, name, lastSeen: new Date() } }
+          );
+        }
+      } catch (_) { }
+      return res.json({ message: 'Profile already exists, updated basic info' });
+    }
+
     console.error('register email error', e);
     res.status(500).json({ message: 'failed to process registration' });
   }

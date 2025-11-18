@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useState } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate, useLocation } from "react-router-dom";
 import './i18n';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
 import TermsOfUse from "./pages/TermsOfUse";
 import "./App.css";
+import bloomLogo from "../bloomlogo.png";
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 import ExploreCommunity from "./pages/Community/Explore";
 import ChatRoom from "./pages/Community/ChatRoom";
@@ -66,9 +67,10 @@ function HoverButton({ children, onClick }) {
   );
 }
 
-// PROTECTED ROUTE COMPONENT (unchanged)
+// PROTECTED ROUTE COMPONENT (unchanged behavior for authed users, but now remembers target route)
 const ProtectedRoute = ({ element: Component, ...rest }) => {
   const { currentUser, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return <div style={{ color: 'white', textAlign: 'center', paddingTop: '50vh' }}>Loading...</div>;
@@ -78,7 +80,8 @@ const ProtectedRoute = ({ element: Component, ...rest }) => {
     return <Component {...rest} />;
   }
 
-  return <Navigate to="/signup" replace />;
+  // Remember the route the user was trying to access
+  return <Navigate to="/signup" replace state={{ from: location }} />;
 };
 
 
@@ -194,6 +197,7 @@ function HomePage() {
   const navigate = useNavigate();
   const { currentUser } = useAuth(); // Get current user state
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
   const LanguageSwitcher = () => {
@@ -246,7 +250,10 @@ function HomePage() {
       {/* Header */}
       <header className="header">
         <nav className="navbar">
-          <div className="logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}>BLOOMENCE</div>
+          <div className="logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+            <img src={bloomLogo} alt="Bloomence logo" className="logo-icon" />
+            <span>BLOOMENCE</span>
+          </div>
           <button
             className="hamburger"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
@@ -257,28 +264,91 @@ function HomePage() {
             <span />
             <span />
           </button>
-          <ul className="nav-menu" style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'nowrap' }}>
-            <li><HoverButton onClick={() => navigate("/dashboard")}>{t('nav.dashboard')}</HoverButton></li>
-            <li><HoverButton onClick={() => navigate("/questionnaires")}>{t('nav.questionnaires')}</HoverButton></li>
-            <li><HoverButton onClick={() => navigate("/ai-recommendation")}>{t('nav.ai_recommendation')}</HoverButton></li>
-            <li><HoverButton onClick={() => navigate("/emergency-contact")}>{t('nav.emergency_contact')}</HoverButton></li>
-            <li><HoverButton onClick={() => navigate("/lifestyle")}>{t('nav.lifestyle')}</HoverButton></li>
-            <li><HoverButton onClick={() => navigate("/analytics")}>{t('nav.analytics')}</HoverButton></li>
-          </ul>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', position: 'relative' }}>
             <LanguageSwitcher />
+            <div className="desktop-menu-wrapper" style={{ position: 'relative' }}>
+              <button
+                className="desktop-menu-button"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-haspopup="true"
+                aria-expanded={menuOpen}
+              >
+                Menu
+              </button>
+              {menuOpen && (
+                <div className="desktop-menu-dropdown" style={{ position: 'absolute', right: 0, top: '110%', background: '#0b1622', border: '1px solid #1f2a37', borderRadius: 10, padding: 8, minWidth: 200, boxShadow: '0 12px 30px rgba(0,0,0,0.6)', zIndex: 200 }}>
+                  <button onClick={() => { setMenuOpen(false); navigate('/dashboard'); }} className="desktop-menu-item">
+                    {t('nav.dashboard')}
+                  </button>
+                  <button onClick={() => { setMenuOpen(false); navigate('/questionnaires'); }} className="desktop-menu-item">
+                    {t('nav.questionnaires')}
+                  </button>
+                  <button onClick={() => { setMenuOpen(false); navigate('/ai-recommendation'); }} className="desktop-menu-item">
+                    {t('nav.ai_recommendation')}
+                  </button>
+                  <button onClick={() => { setMenuOpen(false); navigate('/emergency-contact'); }} className="desktop-menu-item">
+                    {t('nav.emergency_contact')}
+                  </button>
+                  <button onClick={() => { setMenuOpen(false); navigate('/lifestyle'); }} className="desktop-menu-item">
+                    {t('nav.lifestyle')}
+                  </button>
+                  <button onClick={() => { setMenuOpen(false); navigate('/analytics'); }} className="desktop-menu-item">
+                    {t('nav.analytics')}
+                  </button>
+                </div>
+              )}
+            </div>
             {renderAuthWidget()}
           </div>
         </nav>
         {/* Responsive nav controls */}
         <style>{`
-          .navbar { padding: 8px 12px; background:#0b1622; position: sticky; top: 0; z-index: 30; box-shadow: none; }
-          .logo { font-size: 1rem; }
+          .navbar { padding: 8px 12px; background: transparent; position: sticky; top: 0; z-index: 30; box-shadow: none; }
+          .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.18em; }
+          .desktop-menu-button {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid #1f2937;
+            background: rgba(15,23,42,0.9);
+            color: #e5e7eb;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          }
+          .desktop-menu-button:hover {
+            background: rgba(16,185,129,0.12);
+            border-color: #10b981;
+            color: #a7f3d0;
+            box-shadow: 0 0 0 1px rgba(16,185,129,0.35);
+          }
+          .desktop-menu-dropdown {
+            background: radial-gradient(circle at top left, rgba(16,185,129,0.16), #020617 55%);
+          }
+          .desktop-menu-item {
+            width: 100%;
+            text-align: left;
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            color: #e5e7eb;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+          }
+          .desktop-menu-item:hover {
+            background: rgba(16,185,129,0.18);
+            color: #ecfdf5;
+            transform: translateX(2px);
+          }
           .hamburger { display: none; background: none; border: 0; }
           .hamburger span { display:block; width:20px; height:2px; background:#e5e7eb; margin:4px 0; }
-          header, .topbar { background:#0b1622; box-shadow:none; position: sticky; top: 0; z-index: 30; }
+          header, .topbar { background: transparent; box-shadow:none; position: sticky; top: 0; z-index: 30; }
           .nav-menu button, .nav-menu .hover-button { box-shadow:none !important; }
-          .hero-section { position: relative; z-index: 1; padding-top: 72px; }
+          .hero-section { position: relative; z-index: 1; padding-top: 56px; }
           /* Ensure any background effects do not overlap header */
           .hero-section::before { content:''; display:block; height:0; }
           @media (max-width: 900px) {

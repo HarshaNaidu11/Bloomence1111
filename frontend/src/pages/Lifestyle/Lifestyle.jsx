@@ -87,17 +87,81 @@ export default function Lifestyle() {
     const addGlass = () => setGlasses(g => Math.min(20, g + 1));
     const resetGlasses = () => setGlasses(0);
     const [journal, setJournal] = useLocalState(k(`foodmood:${todayKey}`), '');
+
+    // Weekly meal plan preferences
+    const [dietPreference, setDietPreference] = useLocalState(k('mealplan:dietPref'), 'veg');
+    const [dailyCalories, setDailyCalories] = useLocalState(k('mealplan:dailyCalories'), 1800);
+    const [carbPct, setCarbPct] = useLocalState(k('mealplan:carbPct'), 50);
+    const [proteinPct, setProteinPct] = useLocalState(k('mealplan:proteinPct'), 25);
+    const [fatPct, setFatPct] = useLocalState(k('mealplan:fatPct'), 25);
+
     const [mealPlan, setMealPlan] = useLocalState(k('mealplan:week'), {});
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const sampleMeals = [
-        'Oats + berries', 'Eggs + toast', 'Greek yogurt + nuts',
-        'Grilled chicken + quinoa', 'Lentil bowl', 'Salmon + veggies', 'Veggie wrap'
+
+    const vegMeals = [
+        { name: 'Oats + berries', focus: 'carb' },
+        { name: 'Paneer & veggie bowl', focus: 'protein' },
+        { name: 'Veggie lentil khichdi', focus: 'protein' },
+        { name: 'Chickpea salad', focus: 'protein' },
+        { name: 'Veggie wrap', focus: 'carb' },
+        { name: 'Dal, rice & salad', focus: 'carb' },
+        { name: 'Yogurt + fruits + nuts', focus: 'fat' }
     ];
+    const nonVegMeals = [
+        { name: 'Eggs + toast', focus: 'protein' },
+        { name: 'Grilled chicken + quinoa', focus: 'protein' },
+        { name: 'Fish curry + rice', focus: 'fat' },
+        { name: 'Chicken stir‑fry + veggies', focus: 'protein' },
+        { name: 'Omelette + multigrain bread', focus: 'fat' },
+        { name: 'Salmon + veggies', focus: 'fat' },
+        { name: 'Greek yogurt + nuts', focus: 'fat' }
+    ];
+
+    const moodBoosters = [
+        'Small piece of dark chocolate',
+        'Herbal tea / green tea',
+        '5‑minute mindful breathing',
+        'Short gratitude note',
+        '10‑minute relaxed walk'
+    ];
+
     const generatePlan = () => {
+        const sourceMealsBase = dietPreference === 'veg' ? vegMeals : nonVegMeals;
+
+        let dominant = 'carb';
+        if (proteinPct >= carbPct && proteinPct >= fatPct) dominant = 'protein';
+        else if (fatPct >= carbPct && fatPct >= proteinPct) dominant = 'fat';
+
+        const focusedMeals = sourceMealsBase.filter(m => m.focus === dominant);
+        const sourceMeals = focusedMeals.length ? focusedMeals : sourceMealsBase;
+
+        const mid = Math.max(1, Math.floor(sourceMeals.length / 2));
+        const lunchCandidates = sourceMeals.slice(0, mid);
+        const dinnerCandidates = sourceMeals.slice(mid);
+
+        const targetCalories = Math.max(1000, Math.min(4000, Number(dailyCalories) || 0));
+        const lunchCalories = Math.round(targetCalories * 0.45);
+        const dinnerCalories = Math.round(targetCalories * 0.45);
+
         const plan = {};
-        days.forEach((d, i) => plan[d] = { lunch: sampleMeals[(i) % sampleMeals.length], dinner: sampleMeals[(i + 3) % sampleMeals.length] });
+        days.forEach((d, i) => {
+            const lunchMeal = lunchCandidates[i % lunchCandidates.length];
+            const dinnerMeal = dinnerCandidates.length ? dinnerCandidates[i % dinnerCandidates.length] : lunchCandidates[(i + 1) % lunchCandidates.length];
+            plan[d] = {
+                lunch: lunchMeal.name,
+                dinner: dinnerMeal.name,
+                lunchCalories,
+                dinnerCalories,
+                lunchMood: moodBoosters[i % moodBoosters.length],
+                dinnerMood: moodBoosters[(i + 2) % moodBoosters.length]
+            };
+        });
         setMealPlan(plan);
     };
+
+    useEffect(() => {
+        generatePlan();
+    }, [dietPreference, dailyCalories, carbPct, proteinPct, fatPct]);
 
     return (
         <div style={{ padding: 24, color: '#e5e7eb', maxWidth: 1100, margin: '0 auto' }}>
@@ -187,15 +251,87 @@ export default function Lifestyle() {
                     <div style={{ background: '#0a1a27', borderRadius: 10, padding: 12 }}>
                         <div style={{ color: '#9ca3af', marginBottom: 6 }}>Weekly meal plan</div>
                         <div>📅 Mon–Sun planner with simple, balanced options.</div>
-                        <button onClick={generatePlan} style={{ marginTop: 8, background: '#10b981', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 10px', fontWeight: 700 }}>Generate simple plan</button>
+
+                        <div style={{ marginTop: 10, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 8, fontSize: 12 }}>
+                            <div>
+                                <div style={{ color: '#9ca3af', marginBottom: 4 }}>Preference</div>
+                                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                                    <button
+                                        onClick={() => setDietPreference('veg')}
+                                        style={{ background: dietPreference === 'veg' ? '#10b981' : '#1f2a37', color: '#e5e7eb', border: 'none', borderRadius: 8, padding: '6px 10px', fontWeight: 600 }}
+                                    >
+                                        🥦 Veg
+                                    </button>
+                                    <button
+                                        onClick={() => setDietPreference('nonveg')}
+                                        style={{ background: dietPreference === 'nonveg' ? '#10b981' : '#1f2a37', color: '#e5e7eb', border: 'none', borderRadius: 8, padding: '6px 10px', fontWeight: 600 }}
+                                    >
+                                        🍗 Non‑veg
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{ color: '#9ca3af', marginBottom: 4 }}>Daily calories</div>
+                                <input
+                                    type="number"
+                                    min={1000}
+                                    max={4000}
+                                    value={dailyCalories}
+                                    onChange={e => setDailyCalories(Number(e.target.value) || 0)}
+                                    style={{ width: '100%', background: '#0b1622', color: '#e5e7eb', border: '1px solid #1f2a37', borderRadius: 8, padding: '6px 8px' }}
+                                />
+                            </div>
+                            <div>
+                                <div style={{ color: '#9ca3af', marginBottom: 4 }}>Carbs %</div>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={100}
+                                    value={carbPct}
+                                    onChange={e => setCarbPct(Number(e.target.value) || 0)}
+                                    style={{ width: '100%', background: '#0b1622', color: '#e5e7eb', border: '1px solid #1f2a37', borderRadius: 8, padding: '6px 8px' }}
+                                />
+                            </div>
+                            <div>
+                                <div style={{ color: '#9ca3af', marginBottom: 4 }}>Protein %</div>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={100}
+                                    value={proteinPct}
+                                    onChange={e => setProteinPct(Number(e.target.value) || 0)}
+                                    style={{ width: '100%', background: '#0b1622', color: '#e5e7eb', border: '1px solid #1f2a37', borderRadius: 8, padding: '6px 8px' }}
+                                />
+                            </div>
+                            <div>
+                                <div style={{ color: '#9ca3af', marginBottom: 4 }}>Fats %</div>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={100}
+                                    value={fatPct}
+                                    onChange={e => setFatPct(Number(e.target.value) || 0)}
+                                    style={{ width: '100%', background: '#0b1622', color: '#e5e7eb', border: '1px solid #1f2a37', borderRadius: 8, padding: '6px 8px' }}
+                                />
+                            </div>
+                        </div>
+
+                        <button onClick={generatePlan} style={{ marginTop: 10, background: '#10b981', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 10px', fontWeight: 700 }}>Regenerate weekly plan</button>
+
+                        <div style={{ marginTop: 8, color: '#9ca3af', fontSize: 11 }}>
+                            These targets guide a simple, mood‑friendly plan. Adjust anytime.
+                        </div>
+
                         <div style={{ marginTop: 10, color: '#e5e7eb', fontSize: 12 }}>
                             {Object.keys(mealPlan).length ? (
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 8 }}>
                                     {days.map((d, i) => (
                                         <div key={i} style={{ background: '#0b1622', border: '1px solid #1f2a37', borderRadius: 8, padding: 8 }}>
                                             <div style={{ color: '#9ca3af', marginBottom: 4 }}>{d}</div>
-                                            <div>Lunch: {mealPlan[d]?.lunch || '-'}</div>
-                                            <div>Dinner: {mealPlan[d]?.dinner || '-'}</div>
+                                            <div>Lunch (~{mealPlan[d]?.lunchCalories || 0} kcal): {mealPlan[d]?.lunch || '-'}</div>
+                                            <div style={{ color: '#9ca3af', fontSize: 11 }}>Mood booster: {mealPlan[d]?.lunchMood || '-'}</div>
+                                            <div style={{ marginTop: 4 }}>Dinner (~{mealPlan[d]?.dinnerCalories || 0} kcal): {mealPlan[d]?.dinner || '-'}</div>
+                                            <div style={{ color: '#9ca3af', fontSize: 11 }}>Mood booster: {mealPlan[d]?.dinnerMood || '-'}</div>
                                         </div>
                                     ))}
                                 </div>

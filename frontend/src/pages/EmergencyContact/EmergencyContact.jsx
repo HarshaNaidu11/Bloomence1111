@@ -63,6 +63,42 @@ function EmergencyContact() {
     const [isLoading, setIsLoading] = useState(true);
     const [routeInfo, setRouteInfo] = useState({ id: null, timeSec: 0, distanceKm: 0, eta: '' });
 
+    const speakRoute = (hospital, summary, instructions) => {
+        if (typeof window === 'undefined' || !('speechSynthesis' in window) || !window.speechSynthesis) {
+            return;
+        }
+
+        const synth = window.speechSynthesis;
+        try { synth.cancel(); } catch { }
+
+        const distanceKm = Math.max(0, summary?.distanceKm || 0);
+        const minutes = Math.max(0, Math.round((summary?.timeSec || 0) / 60));
+
+        const mainSentence = `Starting navigation to ${hospital.name}. Approximately ${distanceKm.toFixed(1)} kilometers away, about ${minutes || 1} minutes.`;
+
+        let stepSentences = '';
+        if (instructions && instructions.length) {
+            const firstSteps = instructions.slice(0, 3).map((step, idx) => {
+                const meters = step.distance != null ? Math.round(step.distance) : null;
+                if (meters && meters > 0) {
+                    return `Step ${idx + 1}: ${step.text}, for about ${meters} meters.`;
+                }
+                return `Step ${idx + 1}: ${step.text}.`;
+            });
+            stepSentences = ' ' + firstSteps.join(' ');
+        } else {
+            stepSentences = ' Follow the highlighted green route on the map.';
+        }
+
+        const utterance = new SpeechSynthesisUtterance(mainSentence + stepSentences);
+        utterance.rate = 1;
+        utterance.pitch = 1;
+
+        try {
+            synth.speak(utterance);
+        } catch { }
+    };
+
     const loadScripts = useCallback(() => {
         const scripts = [
             { type: 'css', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' },
@@ -221,7 +257,11 @@ function EmergencyContact() {
                     const opts = { hour: 'numeric', minute: '2-digit' };
                     try { return new Intl.DateTimeFormat(undefined, opts).format(d); } catch { return d.toLocaleTimeString(); }
                 };
+                const summary = { timeSec, distanceKm };
                 setRouteInfo({ id: hospital.id, timeSec, distanceKm, eta: fmt(etaDate) });
+
+                const maybeInstructions = r.instructions || (r.itinerary && r.itinerary.instructions) || [];
+                speakRoute(hospital, summary, maybeInstructions);
             } catch (_) { }
         });
     };

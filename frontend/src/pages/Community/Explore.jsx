@@ -95,6 +95,57 @@ const CATEGORIES = [
     },
 ];
 
+const SELF_HELP_GROUPS = [
+    {
+        key: 'daily-check-in',
+        title: 'Daily Check-in Circle',
+        tagline: 'Share how you feel today in a safe space.',
+        color: '#10b981',
+        description: 'A gentle space to do quick mood check-ins, celebrate small wins, and ask for encouragement.',
+        route: '/community/selfhelp/daily-check-in'
+    },
+    {
+        key: 'anxiety-coping',
+        title: 'Anxiety Coping Squad',
+        tagline: 'Breathe, ground, and support each other.',
+        color: '#0ea5e9',
+        description: 'Swap coping tools for racing thoughts, panic feelings, or difficult days.',
+        route: '/community/selfhelp/anxiety-coping'
+    },
+    {
+        key: 'low-mood',
+        title: 'Low Mood Support',
+        tagline: 'You do not have to go through this alone.',
+        color: '#8b5cf6',
+        description: 'For days that feel heavy—share, listen, and be heard without judgement.',
+        route: '/community/selfhelp/low-mood'
+    },
+    {
+        key: 'study-focus',
+        title: 'Study & Focus Pod',
+        tagline: 'Stay accountable with others like you.',
+        color: '#f59e0b',
+        description: 'Students and professionals co-working virtually, sharing focus tips and routines.',
+        route: '/community/selfhelp/study-focus'
+    },
+    {
+        key: 'relationships',
+        title: 'Relationships & Boundaries',
+        tagline: 'Talk through conflict, loss, and connection.',
+        color: '#ec4899',
+        description: 'Discuss breakups, family stress, and boundary setting with people who understand.',
+        route: '/community/selfhelp/relationships'
+    },
+    {
+        key: 'habits-growth',
+        title: 'Habits & Growth Lab',
+        tagline: 'Tiny steps towards a better you.',
+        color: '#22c55e',
+        description: 'Work on small daily habits together—sleep, exercise, journaling, and more.',
+        route: '/community/selfhelp/habits-growth'
+    },
+];
+
 export default function ExploreCommunity() {
     const navigate = useNavigate();
 
@@ -140,6 +191,57 @@ export default function ExploreCommunity() {
                     </section>
                 ))}
             </div>
+
+            <section style={{ marginTop: 40 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+                    <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '0.02em', color: '#ffffff' }}>Self Help Groups</h2>
+                    <p style={{ color: '#9ca3af', fontSize: 14, maxWidth: 420 }}>
+                        Join a small, focused group and stay connected with people facing similar challenges. These are
+                        peer-led spaces—be kind, respectful, and avoid sharing personal identifying details.
+                    </p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+                    {SELF_HELP_GROUPS.map((g) => (
+                        <div key={g.key} style={{ borderRadius: 14, border: '1px solid #1f2a37', background: '#020817', overflow: 'hidden', boxShadow: '0 18px 45px rgba(0,0,0,0.55)' }}>
+                            <div style={{ height: 4, background: g.color }} />
+                            <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                                    <h3 style={{ fontSize: 18, fontWeight: 800, color: '#f9fafb' }}>{g.title}</h3>
+                                    <span style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.09em', padding: '4px 8px', borderRadius: 999, border: `1px solid ${g.color}55`, color: '#e5e7eb', background: '#020617' }}>
+                                        Self help
+                                    </span>
+                                </div>
+                                <p style={{ color: '#a3a3a3', fontSize: 13 }}>{g.tagline}</p>
+                                <p style={{ color: '#6b7280', fontSize: 12, lineHeight: 1.5 }}>{g.description}</p>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', fontSize: 11, color: '#9ca3af' }}>
+                                        <span>Approx. 10–30 members</span>
+                                        <span style={{ color: '#22c55e' }}>Open 24/7 • Text only</span>
+                                    </div>
+                                    <button
+                                        onClick={() => navigate(g.route)}
+                                        style={{
+                                            background: g.color,
+                                            color: '#ffffff',
+                                            border: 'none',
+                                            padding: '8px 14px',
+                                            borderRadius: 999,
+                                            cursor: 'pointer',
+                                            fontWeight: 700,
+                                            letterSpacing: '0.04em',
+                                            fontSize: 12,
+                                            boxShadow: '0 10px 25px rgba(16,185,129,0.35)'
+                                        }}
+                                    >
+                                        Join Group
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 }

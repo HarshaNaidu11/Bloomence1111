@@ -35,7 +35,7 @@ const fetchScoresForBot = async (uid) => {
 }
 
 const listModels = async () => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`;
     const r = await fetch(url);
     if (!r.ok) throw new Error(`listModels failed: ${r.status}`);
     return (await r.json())?.models || [];
@@ -43,20 +43,26 @@ const listModels = async () => {
 
 const chooseModel = async () => {
     if (RESOLVED_MODEL) return RESOLVED_MODEL;
-    // Allow manual override
-    if (process.env.GEMINI_MODEL && process.env.GEMINI_MODEL.trim()) {
-        RESOLVED_MODEL = process.env.GEMINI_MODEL.trim();
-        return RESOLVED_MODEL;
-    }
     const models = await listModels();
-    // Exclude experimental and 2.5 models for free tier reliability
+    const ids = new Set((models || []).map(m => (m.name || '').split('/').pop()));
+    const supportsGen = (id) => {
+        const m = (models || []).find(mm => (mm.name || '').endsWith('/' + id));
+        return m && Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent');
+    };
+    if (process.env.GEMINI_MODEL && process.env.GEMINI_MODEL.trim()) {
+        const wanted = process.env.GEMINI_MODEL.trim();
+        if (ids.has(wanted) && supportsGen(wanted) && !/2\.5|preview|exp/i.test(wanted)) {
+            RESOLVED_MODEL = wanted;
+            return RESOLVED_MODEL;
+        }
+    }
     const isAllowed = (m) => {
         const id = m.name?.split('/').pop() || '';
-        if (/2\.5|exp/i.test(id)) return false;
+        if (/2\.5|preview|exp/i.test(id)) return false;
         return Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent');
     };
     const available = models.filter(isAllowed).map(m => m.name.split('/').pop());
-    const prefer = ['gemini-1.5-flash', 'gemini-1.5-flash-001', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro'];
+    const prefer = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro'];
     let found = prefer.find(p => available.includes(p)) || available[0];
     if (!found) throw new Error('No supported Gemini model available for this API key');
     RESOLVED_MODEL = found;
@@ -65,9 +71,9 @@ const chooseModel = async () => {
 
 const callGenerateContent = async (promptText) => {
     const model = await chooseModel();
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
     const body = {
-        contents: [ { role: 'user', parts: [ { text: promptText } ] } ]
+        contents: [{ role: 'user', parts: [{ text: promptText }] }]
     };
     const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     if (!r.ok) {
@@ -75,6 +81,9 @@ const callGenerateContent = async (promptText) => {
         // Surface friendlier message for quota/rate limit
         if (r.status === 429) {
             throw new Error('The free Gemini quota was exceeded. Please wait a bit and try again, or set a billing-enabled API key.');
+        }
+        if (r.status === 404) {
+            RESOLVED_MODEL = null;
         }
         throw new Error(`generateContent ${r.status}: ${t}`);
     }
@@ -196,7 +205,7 @@ router.post('/chat-stream', async (req, res) => {
         const timer = setInterval(() => {
             if (closed) {
                 clearInterval(timer);
-                try { res.end(); } catch (_) {}
+                try { res.end(); } catch (_) { }
                 return;
             }
             if (i >= words.length) {
@@ -211,7 +220,7 @@ router.post('/chat-stream', async (req, res) => {
         }, 20);
     } catch (error) {
         if (!res.headersSent) res.status(500);
-        try { res.write(`data: [ERROR] ${error?.message || 'Unknown error'}\n\n`); } catch (_) {}
+        try { res.write(`data: [ERROR] ${error?.message || 'Unknown error'}\n\n`); } catch (_) { }
         res.end();
     }
 });
